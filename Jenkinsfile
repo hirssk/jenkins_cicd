@@ -27,6 +27,17 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing'
+		script {
+		    def url = 'ObjectURL'
+		    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' '$url'", returnStdout: true)
+
+		    if (response == '200'){
+		        echo 'Test OK'
+		    } else {
+		        echo response
+			error 'Test NG'
+		    }
+		}
             }
         }
         stage('release') {
